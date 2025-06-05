@@ -1,3 +1,14 @@
 html, body {
-  cursor: url("chrome-extension://__MSG_@@extension_id__/cursor.png") 32 32, auto !important;
+    cursor: url("chrome-extension://__MSG_@@extension_id__/cursor.png") 0 0, auto !important;
+}
+
+a,
+button,
+[role="button"],
+[onclick],
+[tabindex]:not([tabindex="-1"]),
+input[type="submit"],
+label[for],
+summary {
+  cursor: url("chrome-extension://__MSG_@@extension_id__/cursor-hand.png") 0 0, pointer !important;
 }
