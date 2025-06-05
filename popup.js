@@ -1,14 +1,21 @@
 var defaultValue = true;
+
 chrome.storage.sync.get('activeSwitch', function (data) {
-  if (!data.hasOwnProperty('activeSwitch') || typeof data.activeSwitch === 'undefined')
+  if (!data.hasOwnProperty('activeSwitch') || typeof data.activeSwitch === 'undefined') {
     data.activeSwitch = defaultValue;
+  }
   document.getElementById("activeSwitch").checked = data.activeSwitch;
 });
 
 function storeSwitch() {
   var switchState = document.getElementById('activeSwitch').checked;
-  chrome.storage.sync.set({activeSwitch: switchState}, function () {
-    console.log('activeSwitch saved');
+
+  chrome.storage.sync.set({ activeSwitch: switchState }, function () {
+    if (switchState) {
+      console.log('El switch está ON');
+    } else {
+      console.log('El switch está OFF');
+    }
   });
 }
 
