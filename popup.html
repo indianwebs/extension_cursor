@@ -1,28 +1,30 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <title>CursorXL</title>
-    <link rel="stylesheet" href="popup.css" />
-  </head>
-  <body>
-    <div class="panel">
-      <div class="header">
-        <span class="logo">🌐</span>
-        <span class="titulo">CursorXL</span>
-        <span class="etiqueta">IndianWebs</span>
-      </div>
-      <hr />
-      <div class="seccion">
-        <p class="subtitulo">Aumenta el tamaño del cursor:</p>
-      </div>
-      <div class="switch-row">
-        <label class="switch-label">
-          <input type="checkbox" unchecked />
-          <span class="checkmark"></span>
-          Activar
-        </label>
-      </div>
+<head>
+  <meta charset="UTF-8" />
+  <title>CursorXL</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="panel">
+    <div class="header">
+      <span class="logo">🌐</span>
+      <span class="titulo">CursorXL</span>
+      <span class="etiqueta">IndianWebs</span>
     </div>
-  </body>
+    <hr />
+    <div class="seccion">
+      <p class="subtitulo">Aumenta el tamaño del cursor:</p>
+    </div>
+    <div class="switch-row">
+      <label class="switch-label">
+        <input id="activeSwitch" type="checkbox" /> 
+        <span class="checkmark"></span>
+        Activar
+      </label>
+      <script src="popup.js"></script>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
 </html>
