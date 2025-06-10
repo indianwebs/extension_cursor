@@ -1,7 +1,8 @@
-html, body {
-    cursor: url("chrome-extension://__MSG_@@extension_id__/cursor.png") 0 0, auto !important;
+body[data-cursor="custom"] {
+  cursor: url('media/cursor-1.svg') 16 16, auto !important; /* cursor general */
 }
 
+body[data-cursor="custom"] 
 a,
 button,
 [role="button"],
@@ -10,5 +11,6 @@ button,
 input[type="submit"],
 label[for],
 summary {
-  cursor: url("chrome-extension://__MSG_@@extension_id__/cursor-hand.png") 0 0, pointer !important;
+  cursor: url('media/cursor-hand.png') 16 16, pointer !important; /* cursor solo en enlaces */
 }
+

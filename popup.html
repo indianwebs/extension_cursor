@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <title>CursorXL</title>
-  <link rel="stylesheet" href="popup.css" />
-</head>
-<body>
-  <div class="panel">
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>CursorXL</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="panel">
     <div class="header">
-      <span class="logo">🌐</span>
+      <img src="media/icon.png" alt="CursorXL-Icon" class="icon">
       <span class="titulo">CursorXL</span>
       <a href="https://indianwebs.com/" target="_blank" class="etiqueta">IndianWebs</a>
     </div>
@@ -22,9 +22,33 @@
         <span class="checkmark"></span>
         Activar
       </label>
-      <script src="popup.js"></script>
     </div>
+
+    <br />
+    <div class="seccion">
+      <p class="subtitulo">Seleccionar:</p>
+      <div class="grid-cursor">
+        <!-- Botones con imágenes -->
+        <button class="cursor-btn" data-cursor="cursor1">
+          <img src="media/cursor-1.svg" alt="Cursor 1" />
+        </button>
+        <button class="cursor-btn" data-cursor="cursor2">
+          <img src="media/cursor-2.svg" alt="Cursor 2" />
+        </button>
+        <button class="cursor-btn" data-cursor="cursor3">
+          <img src="media/cursor-3.svg" alt="Cursor 3" />
+        </button>
+      </div>
+    </div>
+
+    <br />
+    <div class="seccion">
+      <p class="subtitulo">Tamaño del cursor:</p>
+      <input type="range" id="cursorSize" min="16" max="64" step="4" value="32" />
+    </div>
+
   </div>
+
   <script src="popup.js"></script>
-</body>
+  </body>
 </html>

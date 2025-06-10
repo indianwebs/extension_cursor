@@ -8,6 +8,11 @@ body {
   padding: 10px;
 }
 
+.icon {
+  width: 20px;
+  height: 20px;
+}
+
 .panel {
   background-color: #2b2b2b;
   border-radius: 10px;
@@ -69,30 +74,65 @@ hr {
 }
 
 .checkmark {
-  width: 20px;
-  height: 20px;
-  background-color: #444;
-  border-radius: 50%;
   position: relative;
+  width: 40px;
+  height: 20px;
+  background-color: #ccc;
+  border-radius: 20px;
   transition: background-color 0.3s;
 }
 
-.switch-label input[type="checkbox"]:checked + .checkmark {
+.checkmark::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.3s;
+}
+
+/* Estado activado (deslizado a la derecha) */
+#activeSwitch:checked + .checkmark {
   background-color: #00bfff;
 }
 
-.checkmark::after {
-  content: "";
-  position: absolute;
-  top: 5px;
-  left: 5px;
-  width: 10px;
-  height: 10px;
-  background: white;
-  border-radius: 50%;
-  display: none;
+#activeSwitch:checked + .checkmark::before {
+  transform: translateX(20px);
 }
 
-.switch-label input[type="checkbox"]:checked + .checkmark::after {
-  display: block;
+.grid-cursor {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.cursor-btn {
+  background: none;
+  border: 2px solid transparent;
+  border-radius: 5px;
+  padding: 5px;
+  cursor: pointer;
+  transition: border 0.3s;
+}
+
+.cursor-btn img {
+  width: 32px;
+  height: 32px;
+}
+
+.cursor-btn:hover,
+.cursor-btn.selected {
+  border: 2px solid #00bfff;
+  background-color: rgba(255, 255, 255, 0.193);
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+#cursorSize {
+  width: 100%;
+  margin-top: 10px;
+  
 }

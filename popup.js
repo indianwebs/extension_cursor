@@ -1,22 +1,18 @@
-var defaultValue = true;
+const switchInput = document.getElementById("activeSwitch");
 
-chrome.storage.sync.get('activeSwitch', function (data) {
-  if (!data.hasOwnProperty('activeSwitch') || typeof data.activeSwitch === 'undefined') {
-    data.activeSwitch = defaultValue;
-  }
-  document.getElementById("activeSwitch").checked = data.activeSwitch;
+// Sincroniza el estado del switch al abrir el popup
+chrome.storage.sync.get("cursorType", ({ cursorType }) => {
+  switchInput.checked = cursorType === "custom";
 });
 
-function storeSwitch() {
-  var switchState = document.getElementById('activeSwitch').checked;
+// Escucha cambios del switch
+switchInput.addEventListener("change", () => {
+  const newType = switchInput.checked ? "custom" : "default";
 
-  chrome.storage.sync.set({ activeSwitch: switchState }, function () {
-    if (switchState) {
-      console.log('El switch está ON');
-    } else {
-      console.log('El switch está OFF');
-    }
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    chrome.tabs.sendMessage(tabs[0].id, {
+      action: "set-cursor",
+      type: newType
+    });
   });
-}
-
-document.getElementById('activeSwitch').addEventListener('change', storeSwitch);
+});
