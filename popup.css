@@ -136,3 +136,69 @@ hr {
   margin-top: 10px;
   
 }
+
+/* Oculta el input file original */
+#uploadCursor {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+/* Estilo para el contenedor */
+.custom-file-upload {
+  display: inline-block;
+  position: relative;
+  margin-top: 10px;
+}
+
+/* Estilo para el label que actuará como botón */
+.custom-file-upload label {
+
+  
+  background: none;
+  border: 2px solid #00bfff88;
+  border-radius: 5px;
+  padding: 5px;
+  cursor: pointer;
+  transition: border 0.3s;
+  display: inline-block;
+}
+
+/* Efecto hover para el botón */
+.custom-file-upload label:hover {
+  border: 2px solid #00bfff;
+  background-color: rgba(255, 255, 255, 0.193);
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.color-picker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.color-picker input[type="color"] {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.color-picker input[type="color"]::-webkit-color-swatch {
+  border: none;
+  border-radius: 50%;
+}
+
+.color-picker input[type="range"] {
+  flex-grow: 1;
+}
+
+#opacityValue {
+  width: 40px;
+  text-align: center;
+  font-size: 12px;
+}

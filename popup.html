@@ -29,13 +29,13 @@
       <p class="subtitulo">Seleccionar:</p>
       <div class="grid-cursor">
         <!-- Botones con imágenes -->
-        <button class="cursor-btn" data-cursor="cursor1">
+        <button class="cursor-btn" data-cursor="cursor-1">
           <img src="media/cursor-1.svg" alt="Cursor 1" />
         </button>
-        <button class="cursor-btn" data-cursor="cursor2">
+        <button class="cursor-btn" data-cursor="cursor-2">
           <img src="media/cursor-2.svg" alt="Cursor 2" />
         </button>
-        <button class="cursor-btn" data-cursor="cursor3">
+        <button class="cursor-btn" data-cursor="cursor-3">
           <img src="media/cursor-3.svg" alt="Cursor 3" />
         </button>
       </div>
@@ -47,6 +47,31 @@
       <input type="range" id="cursorSize" min="16" max="64" step="4" value="32" />
     </div>
 
+    <br />
+    <div class="seccion">
+      <p class="subtitulo">Color del cursor:</p>
+
+      <label class="switch">
+        <input type="checkbox" id="colorSwitch" />
+        <span class="slider round"></span>
+      </label>
+      <span style="margin-left: 8px;">Color personalizado</span>
+      
+      <div class="color-picker">
+        <input type="color" id="cursorColor" value="#000000">
+        <input type="range" id="cursorOpacity" min="0" max="100" value="100">
+        <span id="opacityValue">100%</span>
+      </div>
+    </div>
+
+    <br />
+    <div class="seccion">
+      <p class="subtitulo">Sube tu propio cursor (.svg - 64x64):</p>
+      <div class="custom-file-upload">
+        <input type="file" id="uploadCursor" accept=".svg" />
+        <label for="uploadCursor">Seleccionar archivo</label>
+      </div>
+    </div>
   </div>
 
   <script src="popup.js"></script>
