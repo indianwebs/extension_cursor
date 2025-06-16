@@ -12,7 +12,7 @@ let currentCursor = {
 // Aplicar cursor
 function applyCursor() {
   // Limpiar estilos previos
-  const existingStyle = document.getElementById("cursorxl-style");
+  const existingStyle = document.getElementById("bigmouse-style");
   if (existingStyle) existingStyle.remove();
 
   if (!currentCursor.active) {
@@ -60,7 +60,7 @@ function applyCursor() {
     const dataUrl = `url("data:image/svg+xml;charset=utf-8,${encoded}") ${currentCursor.size / 2} ${currentCursor.size / 2}, auto`;
     
     const style = document.createElement("style");
-    style.id = "cursorxl-style";
+    style.id = "bigmouse-style";
     style.textContent = `
       body, body * {
         cursor: ${dataUrl} !important;
@@ -88,7 +88,7 @@ function applyCursor() {
         const dataUrl = `url("data:image/svg+xml;charset=utf-8,${encoded}") ${currentCursor.size / 2} ${currentCursor.size / 2}, auto`;
         
         const style = document.createElement("style");
-        style.id = "cursorxl-style";
+        style.id = "bigmouse-style";
         style.textContent = `
           body, body * {
             cursor: ${dataUrl} !important;
@@ -99,7 +99,7 @@ function applyCursor() {
       .catch(err => {
         console.error("Error cargando cursor:", err);
         // Si falla, volver al cursor por defecto
-        const existingStyle = document.getElementById("cursorxl-style");
+        const existingStyle = document.getElementById("bigmouse-style");
         if (existingStyle) existingStyle.remove();
       });
   }
