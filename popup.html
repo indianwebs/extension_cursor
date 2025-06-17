@@ -51,13 +51,13 @@
     <div class="seccion">
       <p class="subtitulo">Color del cursor:</p>
 
-      <label class="switch">
-        <input type="checkbox" id="colorSwitch" />
-        <span class="slider round"></span>
+      <label class="switch-label" style="margin-top: 10px;">
+        <input id="colorSwitch" type="checkbox" />
+        <span class="checkmark"></span>
+        Color personalizado
       </label>
-      <span style="margin-left: 8px;">Color personalizado</span>
       
-      <div class="color-picker">
+      <div class="color-picker" style="margin-top: 10px;">
         <input type="color" id="cursorColor" value="#000000">
         <input type="range" id="cursorOpacity" min="0" max="100" value="100">
         <span id="opacityValue">100%</span>
