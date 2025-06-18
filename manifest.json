@@ -2,7 +2,13 @@
   "manifest_version": 3,
   "name": "BigMouse",
   "version": "1.0",
+  "description": "Extensión para personalizar el cursor del mouse con diferentes estilos, tamaños y colores.",
   "permissions": ["storage"],
+  "icons": {
+    "16": "media/icon16.png",
+    "48": "media/icon48.png",
+    "128": "media/icon128.png"
+  },
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
