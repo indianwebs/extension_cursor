@@ -17,6 +17,8 @@ let currentState = {
   cursorOpacity: 100
 };
 
+let isUpdating = false;
+
 function loadState() {
   chrome.storage.local.get(
     ["cursorType", "selectedCursor", "cursorSize", "customCursorSvg", "colorEnabled", "cursorColor", "cursorOpacity"],
@@ -69,101 +71,107 @@ function updateUI() {
 }
 
 function updateStorage() {
-  chrome.storage.local.set({
-    cursorType: currentState.active ? "custom" : "default",
-    selectedCursor: currentState.selectedCursor,
-    cursorSize: currentState.size,
-    customCursorSvg: currentState.customCursorSvg,
-    colorEnabled: currentState.colorEnabled,
-    cursorColor: currentState.cursorColor,
-    cursorOpacity: currentState.cursorOpacity
-  }, () => {
-    if (chrome.runtime.lastError) {
-      console.error("Error al guardar el estado: ", chrome.runtime.lastError);
-      alert("Hubo un error al guardar el cursor. Es posible que el archivo sea demasiado grande.");
-    }
+  return new Promise((resolve) => {
+    chrome.storage.local.set({
+      cursorType: currentState.active ? "custom" : "default",
+      selectedCursor: currentState.active ? currentState.selectedCursor : "",
+      cursorSize: currentState.size,
+      customCursorSvg: currentState.customCursorSvg,
+      colorEnabled: currentState.colorEnabled,
+      cursorColor: currentState.cursorColor,
+      cursorOpacity: currentState.cursorOpacity
+    }, () => {
+      if (chrome.runtime.lastError) {
+        console.error("Storage error:", chrome.runtime.lastError);
+      }
+      resolve();
+    });
   });
 }
 
 function updateAllTabs() {
-  chrome.tabs.query({}, tabs => {
-    tabs.forEach(tab => {
-      chrome.tabs.sendMessage(tab.id, {
-        action: "update-cursor",
-        state: currentState
-      }, () => {});
+  return new Promise((resolve) => {
+    chrome.tabs.query({}, (tabs) => {
+      if (tabs.length === 0) {
+        resolve();
+        return;
+      }
+
+      let completed = 0;
+      tabs.forEach((tab) => {
+        try {
+          chrome.tabs.sendMessage(
+            tab.id,
+            {
+              action: "update-cursor",
+              state: currentState
+            },
+            () => {
+              completed++;
+              if (completed >= tabs.length) resolve();
+            }
+          );
+        } catch (error) {
+          console.error(`Error in tab ${tab.id}:`, error);
+          completed++;
+          if (completed >= tabs.length) resolve();
+        }
+      });
     });
   });
+}
+
+async function safeUpdate() {
+  if (isUpdating) return;
+  isUpdating = true;
+
+  try {
+    await updateStorage();
+    await updateAllTabs();
+    updateUI();
+  } catch (error) {
+    console.error("Update error:", error);
+  } finally {
+    isUpdating = false;
+  }
 }
 
 function selectCursor(cursorId) {
   currentState.selectedCursor = cursorId;
   currentState.active = true;
-
-  updateUI();
-  updateStorage();
-  updateAllTabs();
+  safeUpdate();
 }
 
-switchInput.addEventListener("change", () => {
+// Event listeners
+switchInput.addEventListener("change", async () => {
   currentState.active = switchInput.checked;
-
-  // Asegurar que haya un cursor válido cuando se activa
-  if (currentState.active && !currentState.selectedCursor) {
-    currentState.selectedCursor = "cursor-1";
+  
+  if (!currentState.active) {
+    currentState.colorEnabled = false;
   }
-
-  updateStorage();
-  updateAllTabs();
-  updateUI();
+  
+  await safeUpdate();
 });
 
 sizeSlider.addEventListener("input", () => {
   currentState.size = parseInt(sizeSlider.value);
-  updateStorage();
-  updateAllTabs();
-  updateUI();
+  safeUpdate();
 });
 
 colorSwitch.addEventListener("change", () => {
   currentState.colorEnabled = colorSwitch.checked;
-
-  if (!currentState.selectedCursor) {
-    currentState.selectedCursor = "cursor-1";
-  }
-  currentState.active = true;
-
-  updateStorage();
-  updateAllTabs();
-  updateUI();
+  safeUpdate();
 });
 
 colorPicker.addEventListener("input", () => {
   currentState.cursorColor = colorPicker.value;
-
-  // Activar automáticamente si aún no hay cursor seleccionado
-  if (!currentState.selectedCursor) {
-    currentState.selectedCursor = "cursor-1";
-  }
-  currentState.active = true;
-
-  updateStorage();
-  updateAllTabs();
-  updateUI();
+  safeUpdate();
 });
 
 opacitySlider.addEventListener("input", () => {
   currentState.cursorOpacity = opacitySlider.value;
   opacityValue.textContent = `${opacitySlider.value}%`;
-
-  if (!currentState.selectedCursor) {
-    currentState.selectedCursor = "cursor-1";
-  }
-  currentState.active = true;
-
-  updateStorage();
-  updateAllTabs();
-  updateUI();
+  safeUpdate();
 });
 
 uploadInput.addEventListener("change", (e) => {
@@ -177,10 +185,7 @@ uploadInput.addEventListener("change", (e) => {
     currentState.customCursorSvg = reader.result;
     currentState.selectedCursor = "custom-upload";
     currentState.active = true;
-
-    updateUI();
-    updateStorage();
-    updateAllTabs();
+    safeUpdate();
   };
   reader.readAsText(file);
 });
@@ -191,4 +196,5 @@ document.querySelectorAll(".cursor-btn").forEach(btn => {
   }
 });
 
+// Initialize
 loadState();

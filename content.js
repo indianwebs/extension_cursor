@@ -1,7 +1,7 @@
 // Estado inicial
 let currentCursor = {
   active: false,
-  type: "default",
+  type: "",
   size: 32,
   customSvg: null,
   colorEnabled: false,
@@ -11,12 +11,16 @@ let currentCursor = {
 
 // Aplicar cursor
 function applyCursor() {
-  // Limpiar estilos previos
-  const existingStyle = document.getElementById("bigmouse-style");
-  if (existingStyle) existingStyle.remove();
+  // Limpiar estilos previos de manera exhaustiva
+  const existingStyles = document.querySelectorAll('style[id="bigmouse-style"]');
+  existingStyles.forEach(style => style.remove());
+  
+  // Resetear cursor por defecto
+  document.body.style.cursor = "";
+  document.documentElement.style.cursor = "";
 
   if (!currentCursor.active) {
-    return; // Si no está activo, no hacer nada (usar cursor por defecto)
+    return;
   }
 
   // Función para modificar el SVG con el color seleccionado
@@ -25,7 +29,6 @@ function applyCursor() {
       return svgText;
     }
     
-    // Convertir el color hexadecimal a RGB
     const hexToRgb = (hex) => {
       const r = parseInt(hex.slice(1, 3), 16);
       const g = parseInt(hex.slice(3, 5), 16);
@@ -36,7 +39,6 @@ function applyCursor() {
     const rgb = hexToRgb(currentCursor.cursorColor);
     const opacity = currentCursor.cursorOpacity / 100;
     
-    // Modificar los paths del SVG para aplicar el color
     return svgText
       .replace(/fill:rgb\([^)]+\)/g, `fill:rgb(${rgb.r},${rgb.g},${rgb.b})`)
       .replace(/fill-opacity:[^;]+/g, `fill-opacity:${opacity}`)
@@ -44,42 +46,38 @@ function applyCursor() {
       .replace(/fill-opacity="[^"]+"/g, `fill-opacity="${opacity}"`);
   };
 
-  // Determinar qué cursor usar
   const isCustomUpload = currentCursor.type === "custom-upload" && currentCursor.customSvg;
   
   if (isCustomUpload) {
-    // Cursor personalizado (SVG subido)
-    let svgText = currentCursor.customSvg;
-    svgText = applyColorToSvg(svgText);
-    
-    const encoded = encodeURIComponent(
-      svgText
-        .replace(/width="[^"]+"/, `width="${currentCursor.size}"`)
-        .replace(/height="[^"]+"/, `height="${currentCursor.size}"`)
-    );
-    const dataUrl = `url("data:image/svg+xml;charset=utf-8,${encoded}") ${currentCursor.size / 2} ${currentCursor.size / 2}, auto`;
-    
-    const style = document.createElement("style");
-    style.id = "bigmouse-style";
-    style.textContent = `
-      body, body * {
-        cursor: ${dataUrl} !important;
-      }
-    `;
-    document.head.appendChild(style);
-  } else {
-    // Cursor predefinido (de los botones)
+    try {
+      let svgText = currentCursor.customSvg;
+      svgText = applyColorToSvg(svgText);
+      
+      const encoded = encodeURIComponent(
+        svgText
+          .replace(/width="[^"]+"/, `width="${currentCursor.size}"`)
+          .replace(/height="[^"]+"/, `height="${currentCursor.size}"`)
+      );
+      const dataUrl = `url("data:image/svg+xml;charset=utf-8,${encoded}") ${currentCursor.size / 2} ${currentCursor.size / 2}, auto`;
+      
+      const style = document.createElement("style");
+      style.id = "bigmouse-style";
+      style.textContent = `
+        body, body * {
+          cursor: ${dataUrl} !important;
+        }
+      `;
+      document.head.appendChild(style);
+    } catch (error) {
+      console.error("Error applying custom cursor:", error);
+    }
+  } else if (currentCursor.type) {
     const cursorPath = `media/${currentCursor.type}.svg`;
     
     fetch(chrome.runtime.getURL(cursorPath))
-      .then(res => {
-        if (!res.ok) throw new Error("Cursor no encontrado");
-        return res.text();
-      })
+      .then(res => res.ok ? res.text() : Promise.reject("Cursor not found"))
       .then(svgText => {
-        let modifiedSvg = svgText;
-        modifiedSvg = applyColorToSvg(modifiedSvg);
-        
+        let modifiedSvg = applyColorToSvg(svgText);
         const encoded = encodeURIComponent(
           modifiedSvg
             .replace(/width="[^"]+"/, `width="${currentCursor.size}"`)
@@ -97,10 +95,7 @@ function applyCursor() {
         document.head.appendChild(style);
       })
       .catch(err => {
-        console.error("Error cargando cursor:", err);
-        // Si falla, volver al cursor por defecto
-        const existingStyle = document.getElementById("bigmouse-style");
-        if (existingStyle) existingStyle.remove();
+        console.error("Error loading cursor:", err);
       });
   }
 }
@@ -110,7 +105,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "update-cursor") {
     currentCursor = {
       active: message.state.active,
-      type: message.state.selectedCursor,
+      type: message.state.active ? message.state.selectedCursor : "",
       size: message.state.size,
       customSvg: message.state.customCursorSvg,
       colorEnabled: message.state.colorEnabled,
@@ -118,7 +113,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       cursorOpacity: message.state.cursorOpacity
     };
     applyCursor();
+    sendResponse({success: true});
   }
+  return true;
 });
 
 // Cargar estado inicial desde storage.local
@@ -127,7 +124,7 @@ chrome.storage.local.get(
   ({ cursorType, selectedCursor, cursorSize, customCursorSvg, colorEnabled, cursorColor, cursorOpacity }) => {
     currentCursor = {
       active: cursorType === "custom",
-      type: selectedCursor || "cursor-1",
+      type: cursorType === "custom" ? selectedCursor || "cursor-1" : "",
       size: cursorSize || 32,
       customSvg: customCursorSvg || null,
       colorEnabled: colorEnabled || false,
@@ -145,10 +142,11 @@ chrome.storage.onChanged.addListener((changes, area) => {
     
     if (changes.cursorType) {
       currentCursor.active = changes.cursorType.newValue === "custom";
+      currentCursor.type = currentCursor.active ? (changes.selectedCursor?.newValue || currentCursor.type) : "";
       needsUpdate = true;
     }
     
-    if (changes.selectedCursor) {
+    if (changes.selectedCursor && currentCursor.active) {
       currentCursor.type = changes.selectedCursor.newValue;
       needsUpdate = true;
     }
