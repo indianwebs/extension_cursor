@@ -27,7 +27,7 @@
   ],
  "web_accessible_resources": [
     {
-      "resources": ["cursor.css", "media/*"],
+      "resources": ["cursor.css", "media/*", "Politica de Privacidad.txt"],
       "matches": ["<all_urls>"]
     }
   ]

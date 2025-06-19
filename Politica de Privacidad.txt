@@ -1,0 +1,22 @@
+En BigMouse, valoramos tu privacidad. Esta extensión está diseñada para mejorar la accesibilidad al hacer que el cursor del ratón sea más grande y visible, sin recoger ni almacenar ningún dato personal o información de navegación.
+
+Datos que recopilamos
+BigMouse no recopila, almacena ni comparte ninguna información personal. La extensión no realiza seguimiento de tu actividad en línea, ni guarda tu historial web, ni registra clics, movimientos del ratón o cualquier otra actividad del usuario.
+
+Uso de la información
+Dado que no recopilamos datos personales ni de navegación, no utilizamos ninguna información del usuario para ningún propósito.
+
+Permisos solicitados
+BigMouse solicita permisos mínimos para funcionar correctamente. Solo utiliza almacenamiento local para guardar las preferencias del tamaño del cursor entre sesiones, lo que permite que se conserve tu configuración personalizada. No se solicitan ni se requieren otros permisos que impliquen la recopilación de información.
+
+Cookies
+BigMouse no utiliza cookies para rastrear tu actividad ni recopilar datos. Solo se utilizan para guardar las preferencias de la extensión, sin almacenar ninguna información identificable.
+
+Seguridad
+BigMouse se compromete a proteger tu privacidad y seguridad. No almacenamos ni compartimos ningún dato personal, y la extensión está diseñada para no interferir en tu privacidad mientras navegas.
+
+Cambios en esta política de privacidad
+Cualquier cambio significativo en esta política será notificado a través de la actualización de esta página. Recomendamos revisar esta política regularmente para mantenerte informado sobre cómo se maneja tu privacidad.
+
+Contacto
+Si tienes alguna pregunta sobre esta política de privacidad o sobre el uso de la extensión, por favor contáctanos a través de hdiaz@indianwebs.es.
